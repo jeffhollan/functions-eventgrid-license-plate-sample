@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27323.2
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventGridWebcast", "EventGridWebcast\EventGridWebcast.csproj", "{0014F8EA-EDDA-4214-A2BB-C075FFE87959}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrafficSimulator", "TrafficSimulator\TrafficSimulator.csproj", "{6E5DB8EA-83BE-46DA-937C-064D8BFD87B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficSimulator", "TrafficSimulator\TrafficSimulator.csproj", "{6E5DB8EA-83BE-46DA-937C-064D8BFD87B5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
