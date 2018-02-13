@@ -2,7 +2,7 @@
   "http": {
     "routePrefix": "api",
     "dynamicThrottlesEnabled": false,
-    "maxConcurrentRequests": 15,
-    "maxOutstandingRequests": 15
+    "maxConcurrentRequests": 30,
+    "maxOutstandingRequests": 30
   }
 }

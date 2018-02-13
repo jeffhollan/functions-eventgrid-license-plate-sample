@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
@@ -13,15 +14,18 @@ namespace TrafficSimulator
             CloudStorageAccount account = CloudStorageAccount.Parse(connectionString);
             var serviceClient = account.CreateCloudQueueClient();
             var queue = serviceClient.GetQueueReference("plates");
-            
-            Parallel.For(0, 1000, 
-                async s =>
+            List<Task> tasks = new List<Task>();
+
+            Console.WriteLine("Simulating cars....");
+            for(int x = 0; x < 1000; x++)
             {
-                await queue.AddMessageAsync(
+                tasks.Add(queue.AddMessageAsync(
                     new Microsoft.WindowsAzure.Storage.Queue.CloudQueueMessage(
-                        "{ \"index\": " + s + " }"
-                        ));
-            });
+                        "{ \"index\": " + x + " }"
+                        )));
+            }
+            Task.WhenAll(tasks).Wait();
+            Console.WriteLine("Complete");
             Console.ReadLine();
         }
 
