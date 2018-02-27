@@ -8,6 +8,8 @@ using System.IO;
 using System.Text;
 using System;
 using System.Collections.Generic;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace EventGridWebcast
 {
@@ -15,23 +17,24 @@ namespace EventGridWebcast
     {
         private static StorageBlobCreatedEventData imageData;
         private static HttpClient client = new HttpClient();
+        private static CloudStorageAccount storageAccount = CloudStorageAccount.Parse(Environment.GetEnvironmentVariable("AzureWebJobsStorage"));
+        private static CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
 
         [FunctionName("ImageTrigger")]
         public static async Task Run(
             [EventGridTrigger]Microsoft.Azure.WebJobs.Extensions.EventGrid.EventGridEvent imageEvent,
-            [Blob("{data.url}", FileAccess.Read)] Stream inBlob,
-            [Blob("{data.url}-license.txt", FileAccess.Write)] Stream outBlob,
             TraceWriter log
             )
         {
             log.Info($"EventGrid trigger fired: {imageEvent.EventType}");
             imageData = imageEvent.Data.ToObject<StorageBlobCreatedEventData>();
 
+            var imageStream = await StreamImageContent(imageData.Url);
             // Analyze the plate data
-            var plate = await AnalyzeImageAsync(inBlob, log);
+            var plate = await AnalyzeImageAsync(imageStream, log);
 
-            // Create output blob with results
-            new MemoryStream(Encoding.UTF8.GetBytes(plate)).CopyTo(outBlob);
+            // Create output data with results
+            await StoreLicensePlateData(imageData.Url, plate);
         }
 
         internal static async Task<string> AnalyzeImageAsync(Stream content, TraceWriter log)
@@ -90,6 +93,22 @@ namespace EventGridWebcast
             request.Content = new StreamContent(content);
             request.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
             return request;
+        }
+
+        private static async Task StoreLicensePlateData(string uri, string plate)
+        {
+            var cb = new CloudBlob(new Uri(uri.Replace(".jpg", "-result.txt")));
+            CloudBlockBlob blob = blobClient.
+                GetContainerReference(cb.Container.Name).
+                GetBlockBlobReference(cb.Name);
+            await blob.UploadTextAsync(plate);
+            
+        }
+
+        private static async Task<Stream> StreamImageContent(string uri)
+        {
+            var blob = await blobClient.GetBlobReferenceFromServerAsync(new Uri(uri));
+            return await blob.OpenReadAsync(null, null, null);
         }
 
         private static string visionApiUrl = Environment.GetEnvironmentVariable("visionApiUrl");
