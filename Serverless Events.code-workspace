@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "TrafficSimulator"
+		},
+		{
+			"path": "/Users/jeffhollan/Development/GitHub/azure-functions-python-worker"
 		}
 	],
 	"settings": {}

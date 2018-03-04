@@ -5,7 +5,7 @@
       "name": "Attach to C# Functions",
       "type": "coreclr",
       "request": "attach",
-      "port": 0
+      "processId": "${command:azureFunctions.pickProcess}"
     }
   ]
 }

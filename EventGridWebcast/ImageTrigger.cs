@@ -15,7 +15,7 @@ namespace EventGridWebcast
 {
     public static class ImageTrigger
     {
-        private static StorageBlobCreatedEventData imageData;
+        private static StorageBlobCreatedEventData eventData;
 
         [FunctionName("ImageTrigger")]
         public static async Task Run(
@@ -24,14 +24,23 @@ namespace EventGridWebcast
             )
         {
             log.Info($"EventGrid trigger fired: {imageEvent.EventType}");
-            imageData = imageEvent.Data.ToObject<StorageBlobCreatedEventData>();
+            eventData = imageEvent.Data.ToObject<StorageBlobCreatedEventData>();
 
-            var imageStream = await StreamImageContent(imageData.Url);
+            var imageStream = await StreamImageContent(eventData.Url);
             // Analyze the plate data
             var plate = await AnalyzeImageAsync(imageStream, log);
 
-            // Create output data with results
-            await StoreLicensePlateData(imageData.Url, plate);
+            if(!String.IsNullOrEmpty(plate)) {
+            // Emit a "Vehicle Entered" alert
+                await EmitEventAsync(
+                    type: "VehicleEntered/Recognized", 
+                    subject: $"Garage{garageId}",
+                    data: new 
+                        {   plateNumber = plate,
+                            garageId = garageId,
+                            gateNumber = gateNumber
+                        });
+            }
         }
 
         internal static async Task<string> AnalyzeImageAsync(Stream content, TraceWriter log)
@@ -51,8 +60,11 @@ namespace EventGridWebcast
                 catch (ArgumentOutOfRangeException)
                 {
                     // If it can't find it, send event to review
-                    await EmitEventAsync(imageData.Url);
-                    return "Manual review initiated";
+                    await EmitEventAsync(
+                        type: "VehicleEntered/Unrecognized", 
+                        subject: new Uri(eventData.Url).PathAndQuery, 
+                        data: new { blob = eventData.Url });
+                    return null;
                 }
             }
             else { return "Got status code " + result.StatusCode; }
@@ -60,17 +72,17 @@ namespace EventGridWebcast
 
 
 
-        private static async Task EmitEventAsync(string url)
+        private static async Task EmitEventAsync(string type, string subject, dynamic data)
         {
             var events = new List<Microsoft.Azure.EventGrid.Models.EventGridEvent>
             {
                 new Microsoft.Azure.EventGrid.Models.EventGridEvent
                 {
-                    EventType = "Plates/Unrecognized",
+                    EventType = type,
                     EventTime = DateTime.UtcNow,
                     Id = Guid.NewGuid().ToString(),
-                    Subject = new Uri(url).PathAndQuery,
-                    Data = new { blob = url }
+                    Subject = subject,
+                    Data = data
                 }
             };
 
@@ -115,5 +127,7 @@ namespace EventGridWebcast
         private static string visionApiKey = Environment.GetEnvironmentVariable("visionApiKey");
         private static string eventGridUrl = Environment.GetEnvironmentVariable("eventGridUrl");
         private static string eventGridKey = Environment.GetEnvironmentVariable("eventGridKey");
+        private static string garageId = "2";
+        private static string gateNumber = "1";
     }
 }
