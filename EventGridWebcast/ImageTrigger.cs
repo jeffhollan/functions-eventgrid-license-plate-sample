@@ -16,9 +16,6 @@ namespace EventGridWebcast
     public static class ImageTrigger
     {
         private static StorageBlobCreatedEventData imageData;
-        private static HttpClient client = new HttpClient();
-        private static CloudStorageAccount storageAccount = CloudStorageAccount.Parse(Environment.GetEnvironmentVariable("AzureWebJobsStorage"));
-        private static CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
 
         [FunctionName("ImageTrigger")]
         public static async Task Run(
@@ -111,6 +108,9 @@ namespace EventGridWebcast
             return await blob.OpenReadAsync(null, null, null);
         }
 
+        private static HttpClient client = new HttpClient();
+        private static CloudStorageAccount storageAccount = CloudStorageAccount.Parse(Environment.GetEnvironmentVariable("AzureWebJobsStorage"));
+        private static CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
         private static string visionApiUrl = Environment.GetEnvironmentVariable("visionApiUrl");
         private static string visionApiKey = Environment.GetEnvironmentVariable("visionApiKey");
         private static string eventGridUrl = Environment.GetEnvironmentVariable("eventGridUrl");
