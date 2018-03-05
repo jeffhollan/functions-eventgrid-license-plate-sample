@@ -30,6 +30,6 @@ namespace TrafficSimulator
         }
 
         private static string connectionString = "DefaultEndpointsProtocol=https;AccountName=eventgridwebcast2;AccountKey=YH60RxZOcZs2tmgMpD02fikPQHCWSUtQ89iBHkmsx7HneoZf8SPfun2XE85yS98WPxEaeqpzHXc488x0WFa9Bg==;BlobEndpoint=https://eventgridwebcast2.blob.core.windows.net/;QueueEndpoint=https://eventgridwebcast2.queue.core.windows.net/;TableEndpoint=https://eventgridwebcast2.table.core.windows.net/;FileEndpoint=https://eventgridwebcast2.file.core.windows.net/;";
-        
+        private static string connectionString1 = "DefaultEndpointsProtocol=https;AccountName=eventgridwebcast;AccountKey=H4qeMVTbYJ4LbMlq0x1ACBhaHd39KU4Q7cjpHH1GMwPGor52Y4AyaRDxQbSw72uLNF8iWXB5k5DRzSH/I0Lujg==;BlobEndpoint=https://eventgridwebcast.blob.core.windows.net/;QueueEndpoint=https://eventgridwebcast.queue.core.windows.net/;TableEndpoint=https://eventgridwebcast.table.core.windows.net/;FileEndpoint=https://eventgridwebcast.file.core.windows.net/;";
     }
 }
