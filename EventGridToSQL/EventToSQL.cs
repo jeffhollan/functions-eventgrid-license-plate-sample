@@ -17,7 +17,7 @@ namespace Vehicle.Process
 {
     public static class EventToSQL
     {
-        private static SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder { UserID = "jeffhollan", Password = "Scottgudemo1!", DataSource = "jeffhollaneventgrid.database.windows.net", InitialCatalog = "vehicles"};
+        private static SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder { UserID = "jeffhollan", Password = "Scottgudemo1!", DataSource = "jeffhollaneventgrid.database.windows.net", InitialCatalog = "vehicles", MultipleActiveResultSets = true};
         private static SqlConnection connection = new SqlConnection(builder.ConnectionString);
         [FunctionName("EventToSQL")]
         public static async Task Run(
@@ -29,6 +29,7 @@ namespace Vehicle.Process
 
             if(connection.State != ConnectionState.Open) 
             {
+                
                 await connection.OpenAsync();
             }
             string cmdText = 
