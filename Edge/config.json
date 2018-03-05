@@ -1,0 +1,34 @@
+{
+    "deployment": {
+        "docker": {
+            "edgeRuntimeImage": "microsoft/azureiotedge-agent:1.0-preview",
+            "loggingOptions": {
+                "log-driver": "json-file",
+                "log-opts": {
+                    "max-size": "10m"
+                }
+            },
+            "registries": [],
+            "uri": "npipe://./pipe/docker_engine"
+        },
+        "type": "docker"
+    },
+    "deviceConnectionString": "HostName=parkinggarage.azure-devices.net;DeviceId=garage1;SharedAccessKey=YeSH4pbRBO/5XTQtuKwwQrpaStOuSczQMXeJz2aoZIQ=",
+    "homeDir": "/var/lib/azure_iot_edge",
+    "hostName": "jeffs-mbp.cjh",
+    "logLevel": "info",
+    "schemaVersion": "1",
+    "security": {
+        "certificates": {
+            "option": "selfSigned",
+            "preInstalled": {
+                "deviceCACertificateFilePath": "",
+                "serverCertificateFilePath": ""
+            },
+            "selfSigned": {
+                "forceNoPasswords": true,
+                "forceRegenerate": false
+            }
+        }
+    }
+}

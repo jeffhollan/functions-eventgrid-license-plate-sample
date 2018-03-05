@@ -10,7 +10,13 @@
 			"path": "/Users/jeffhollan/Development/GitHub/azure-functions-python-worker"
 		},
 		{
-			"path": "EventGridToCosmos"
+			"path": "EventGridToDisplay"
+		},
+		{
+			"path": "Edge"
+		},
+		{
+			"path": "EventGridToSQL"
 		}
 	],
 	"settings": {}
