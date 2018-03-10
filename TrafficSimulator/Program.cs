@@ -17,7 +17,7 @@ namespace TrafficSimulator
             List<Task> tasks = new List<Task>();
 
             Console.WriteLine("Simulating cars....");
-            for(int x = 0; x < 1000; x++)
+            for(int x = 0; x < 100; x++)
             {
                 tasks.Add(queue.AddMessageAsync(
                     new Microsoft.WindowsAzure.Storage.Queue.CloudQueueMessage(

@@ -25,8 +25,9 @@ namespace EventGridWebcast
         {
             log.Info($"EventGrid trigger fired: {imageEvent.EventType}");
             eventData = imageEvent.Data.ToObject<StorageBlobCreatedEventData>();
-
             var imageStream = await StreamImageContent(eventData.Url);
+
+            
             // Analyze the plate data
             var plate = await AnalyzeImageAsync(imageStream, log);
 

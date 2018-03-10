@@ -29,7 +29,6 @@ namespace Vehicle.Process
 
             if(connection.State != ConnectionState.Open) 
             {
-                
                 await connection.OpenAsync();
             }
             string cmdText = 
